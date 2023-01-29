@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: service-a
+  labels:
+    istio.io/rev: asm-managed
