@@ -15,7 +15,7 @@ kubectl --context=autopilot-cluster-2 apply -f service-b
 
 ### exec into another pod and call `service-a` and `service-b`
 ```
-kubectl --context=autopilot-cluster-1 -n whereami-http exec --stdin --tty whereami-http-549c466796-k4lls -- /bin/sh
+kubectl --context=autopilot-cluster-1 -n whereami-http exec --stdin --tty deploy/whereami-http -- /bin/sh
 curl service-a.service-a.svc.cluster.local # works
 curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
 ```
