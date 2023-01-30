@@ -14,6 +14,7 @@ kubectl --context=autopilot-cluster-2 apply -f service-b
 ```
 
 ### exec into another pod that's enabled to call `service-a` via authz policy and call `service-a` and `service-b`
+> the demo calls are coming from deployments configured in https://github.com/theemadnes/mci-asm-http-grpc-demo
 ```
 kubectl --context=autopilot-cluster-1 -n whereami-http exec --stdin --tty deploy/whereami-http -- /bin/sh
 curl service-a.service-a.svc.cluster.local # works
