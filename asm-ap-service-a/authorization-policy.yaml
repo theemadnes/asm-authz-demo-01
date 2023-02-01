@@ -1,0 +1,17 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: service-a
+  namespace: service-a
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/whereami-http/sa/whereami-http"]
+    - source:
+        namespaces: ["whereami-http"]
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/*"]
