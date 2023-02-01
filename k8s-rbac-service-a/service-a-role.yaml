@@ -8,5 +8,6 @@ rules:
 #  resources: ["pods"]
 #  verbs: ["get", "watch", "list"]
 - apiGroups: ["security.istio.io/v1beta1"] # 
-  resources: ["AuthorizationPolicy"]
-  verbs: ["get", "watch", "list", "delete", "create", "patch"]
+  #resources: ["AuthorizationPolicy"]
+  #resources: ["*"]
+  verbs: ["get", "watch", "list", "delete", "deletecollection", "create", "patch"]
