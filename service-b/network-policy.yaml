@@ -1,15 +1,9 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-from-whereami
+  name: deny-all-ingress
+  namespace: service-b
 spec:
   policyTypes:
   - Ingress
-  podSelector:
-    matchLabels:
-      app: service-b
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: whereami-http
+  podSelector: {}
