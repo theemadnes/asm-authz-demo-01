@@ -11,6 +11,9 @@ spec:
       app: service-a
   ingress:
   - from:
-    - podSelector:
+    - nodeSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: whereami-http
+      podSelector:
         matchLabels:
           app: whereami-http
