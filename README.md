@@ -1,6 +1,12 @@
 # asm-authz-demo-01
 testing asm authz + rbac 
 
+### rename kube contexts
+```
+kubectx autopilot-cluster-1=gke_mc-e2m-01_us-central1_autopilot-cluster-1
+kubectx autopilot-cluster-2=gke_mc-e2m-01_us-central1_autopilot-cluster-2
+```
+
 ### service a
 ```
 kubectl --context=autopilot-cluster-1 apply -f service-a
