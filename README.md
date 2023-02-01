@@ -33,3 +33,17 @@ kubectl --context=autopilot-cluster-1 -n whereami-grpc exec --stdin --tty deploy
 curl service-a.service-a.svc.cluster.local # doesn't work -> RBAC: access denied
 curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
 ```
+
+### test deletion of authorization policy `service-a` by `service-a-dev@alexmattson.altostrat.com`
+```
+$ kubectl --context=autopilot-cluster-1 -n service-a delete authorizationpolicy service-a
+Error from server (Forbidden): authorizationpolicies.security.istio.io "service-a" is forbidden: User "service-a-dev@alexmattson.altostrat.com" cannot delete resource "authorizationpolicies" in API group "security.istio.io" in the namespace "service-a": requires one of ["container.thirdPartyObjects.delete"] permission(s).
+```
+
+### create role and roleBinding to allow `service-a-dev@alexmattson.altostrat.com` to modify authorization policies
+```
+kubectl --context=autopilot-cluster-1 apply -f k8s-rbac-service-a
+kubectl --context=autopilot-cluster-2 apply -f k8s-rbac-service-a
+```
+
+### from Cloud Shell when logged in as `service-a-dev@alexmattson.altostrat.com` attempt to delete authorization policy
