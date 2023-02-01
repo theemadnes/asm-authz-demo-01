@@ -1,0 +1,22 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: service-b-authorizationpolicy-role-binding
+  namespace: service-b
+subjects:
+# Google Cloud user account
+- kind: User
+  name: service-b-dev@alexmattson.altostrat.com
+# Kubernetes service account
+#- kind: ServiceAccount
+#  name: johndoe
+# IAM service account
+#- kind: User
+#  name: test-account@test-project.iam.gserviceaccount.com
+# Google Group
+#- kind: Group
+#  name: accounting-group@example.com
+roleRef:
+  kind: Role
+  name: service-b-authorizationpolicy-role
+  apiGroup: rbac.authorization.k8s.io
