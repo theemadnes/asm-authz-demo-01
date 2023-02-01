@@ -18,9 +18,27 @@ kubectl --context=autopilot-cluster-2 apply -f service-a
 kubectl --context=autopilot-cluster-1 apply -f service-b
 kubectl --context=autopilot-cluster-2 apply -f service-b
 ```
+### NetworkPolicy: exec into another pod, and attempt to call `service-a` and `service-b`
+> the demo calls are coming from deployments configured in https://github.com/theemadnes/mci-asm-http-grpc-demo
+```
+kubectl --context=autopilot-cluster-1 -n whereami-http exec --stdin --tty deploy/whereami-http -- /bin/sh
+curl service-a.service-a.svc.cluster.local # works
+curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
+```
+
+### remove network policies and apply Authorization Policies for greater granularity
+```
+kubectl --context=autopilot-cluster-1 delete -f service-a/network-policy.yaml
+kubectl --context=autopilot-cluster-1 delete -f service-b/network-policy.yaml
+kubectl --context=autopilot-cluster-2 delete -f service-a/network-policy.yaml
+kubectl --context=autopilot-cluster-2 delete -f service-b/network-policy.yaml
+kubectl --context=autopilot-cluster-1 apply -f asm-ap-service-a
+kubectl --context=autopilot-cluster-1 apply -f asm-ap-service-b
+kubectl --context=autopilot-cluster-2 apply -f asm-ap-service-a
+kubectl --context=autopilot-cluster-2 apply -f asm-ap-service-b
+```
 
 ### exec into another pod that's enabled to call `service-a` via authz policy and call `service-a` and `service-b`
-> the demo calls are coming from deployments configured in https://github.com/theemadnes/mci-asm-http-grpc-demo
 ```
 kubectl --context=autopilot-cluster-1 -n whereami-http exec --stdin --tty deploy/whereami-http -- /bin/sh
 curl service-a.service-a.svc.cluster.local # works

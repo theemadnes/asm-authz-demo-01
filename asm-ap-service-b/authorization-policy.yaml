@@ -1,8 +1,8 @@
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: service-a
-  namespace: service-a
+  name: service-b
+  namespace: service-b
 spec:
   action: ALLOW
   rules:
@@ -14,7 +14,7 @@ spec:
     to:
     - operation:
         methods: ["GET"]
-        paths: ["/*"]
+        paths: ["/somethingelse*"]
     #- operation:
     #    methods: ["POST"]
     #    paths: ["/data"]
