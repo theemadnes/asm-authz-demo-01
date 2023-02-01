@@ -7,7 +7,7 @@ rules:
 #- apiGroups: [""] # "" indicates the core API group
 #  resources: ["pods"]
 #  verbs: ["get", "watch", "list"]
-- apiGroups: ["security.istio.io/v1beta1"] # 
-  #resources: ["AuthorizationPolicy"]
+- apiGroups: ["security.istio.io"] # 
+  resources: ["authorizationpolicies"]
   #resources: ["*"]
   verbs: ["get", "watch", "list", "delete", "deletecollection", "create", "patch"]

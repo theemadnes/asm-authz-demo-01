@@ -47,3 +47,13 @@ kubectl --context=autopilot-cluster-2 apply -f k8s-rbac-service-a
 ```
 
 ### from Cloud Shell when logged in as `service-a-dev@alexmattson.altostrat.com` attempt to delete authorization policy
+```
+$ kubectl --context=autopilot-cluster-1 -n service-a delete authorizationpolicy service-a
+authorizationpolicy.security.istio.io "service-a" deleted
+```
+
+### recreate the authorization policy to get things back to good
+```
+$ kubectl apply -f service-a/authorizationpolicy.yaml
+authorizationpolicy.security.istio.io/service-a created
+```
