@@ -58,7 +58,7 @@ Then test:
 ```
 kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
 curl service-a.service-a.svc.cluster.local # works, needed to add CIDR block matching
-curl service-b.service-b.svc.cluster.local # works
+curl service-b.service-b.svc.cluster.local # fails: upstream connect error or disconnect/reset before headers. retried and the latest reset reason: connection failure
 ```
 
 ### remove network policies
