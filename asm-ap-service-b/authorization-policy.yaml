@@ -8,13 +8,13 @@ spec:
   rules:
   - from:
     - source:
-        principals: ["cluster.local/ns/whereami-http/sa/whereami-http"]
+        principals: ["cluster.local/ns/client-2/sa/client-2"]
     - source:
-        namespaces: ["whereami-http"]
+        namespaces: ["client-2"]
     to:
     - operation:
         methods: ["GET"]
-        paths: ["/somethingelse*"]
+        paths: ["/*"]
     #- operation:
     #    methods: ["POST"]
     #    paths: ["/data"]

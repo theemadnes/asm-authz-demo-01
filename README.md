@@ -43,32 +43,47 @@ Then test:
 ```
 kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
 curl service-a.service-a.svc.cluster.local # works, needed to add CIDR block matching
-curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
+curl service-b.service-b.svc.cluster.local # works
 ```
 
-### remove network policies and apply Authorization Policies for greater granularity
+### remove network policies
 ```
 kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-a
 kubectl --context=autopilot-cluster-2 delete -f networkpolicy-service-a
 kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-b
 kubectl --context=autopilot-cluster-2 delete -f networkpolicy-service-b
+```
+
+### enable peer authentication == `strict` to require mTLS 
+> This will break `client-2`, as it has no sidecar
+```
+kubectl --context=autopilot-cluster-1 apply -f asm-peer-authentication-meshwide
+kubectl --context=autopilot-cluster-2 apply -f asm-peer-authentication-meshwide
+
+# test from client-1
+kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
+curl service-a.service-a.svc.cluster.local # works
+curl service-b.service-b.svc.cluster.local # works
+
+# test from client-2
+kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
+curl service-a.service-a.svc.cluster.local # fails: Recv failure: Connection reset by peer
+curl service-b.service-b.svc.cluster.local # fails: Recv failure: Connection reset by peer
+```
+
+### apply Authorization Policies for request-level granularity
+```
 kubectl --context=autopilot-cluster-1 apply -f asm-ap-service-a
 kubectl --context=autopilot-cluster-1 apply -f asm-ap-service-b
 kubectl --context=autopilot-cluster-2 apply -f asm-ap-service-a
 kubectl --context=autopilot-cluster-2 apply -f asm-ap-service-b
 ```
 
-### exec into another pod that's enabled to call `service-a` via authz policy and call `service-a` and `service-b`
+### exec into a pod that's enabled to call `service-a` via authz policy and call `service-a` and `service-b`
+Try from `client-1` only, as `client-2` won't work as there's no sidecar
 ```
-kubectl --context=autopilot-cluster-1 -n whereami-http exec --stdin --tty deploy/whereami-http -- /bin/sh
+kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
 curl service-a.service-a.svc.cluster.local # works
-curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
-```
-
-### exec into another pod that's not enabled via authz policy and call `service-a` and `service-b`
-```
-kubectl --context=autopilot-cluster-1 -n whereami-grpc exec --stdin --tty deploy/whereami-grpc -- /bin/sh
-curl service-a.service-a.svc.cluster.local # doesn't work -> RBAC: access denied
 curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
 ```
 
@@ -94,4 +109,18 @@ authorizationpolicy.security.istio.io "service-a" deleted
 ```
 $ kubectl --context=autopilot-cluster-1 apply -f service-a/authorizationpolicy.yaml
 authorizationpolicy.security.istio.io/service-a created
+```
+
+### clear out all authn/z & network policies to reset back to beginning
+```
+kubectl --context=autopilot-cluster-1 delete -f asm-ap-service-a
+kubectl --context=autopilot-cluster-1 delete -f asm-ap-service-b
+kubectl --context=autopilot-cluster-2 delete -f asm-ap-service-a
+kubectl --context=autopilot-cluster-2 delete -f asm-ap-service-b
+kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-a
+kubectl --context=autopilot-cluster-2 delete -f networkpolicy-service-a
+kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-b
+kubectl --context=autopilot-cluster-2 delete -f networkpolicy-service-b
+kubectl --context=autopilot-cluster-1 delete -f asm-peer-authentication-meshwide
+kubectl --context=autopilot-cluster-2 delete -f asm-peer-authentication-meshwide
 ```

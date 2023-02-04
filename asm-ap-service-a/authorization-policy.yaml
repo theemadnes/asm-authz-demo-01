@@ -8,9 +8,9 @@ spec:
   rules:
   - from:
     - source:
-        principals: ["cluster.local/ns/whereami-http/sa/whereami-http"]
+        principals: ["cluster.local/ns/client-1/sa/client-1"]
     - source:
-        namespaces: ["whereami-http"]
+        namespaces: ["client-1"]
     to:
     - operation:
         methods: ["GET"]
