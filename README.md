@@ -30,20 +30,28 @@ kubectl --context=autopilot-cluster-2 apply -f service-a
 kubectl --context=autopilot-cluster-1 apply -f service-b
 kubectl --context=autopilot-cluster-2 apply -f service-b
 ```
-### NetworkPolicy: exec into another pod, and attempt to call `service-a` and `service-b`
-> the demo calls are coming from deployments configured in https://github.com/theemadnes/mci-asm-http-grpc-demo
+
+### NetworkPolicy: apply networkpolicies, exec into another pod, and attempt to call `service-a` and `service-b`
+First apply:
 ```
-kubectl --context=autopilot-cluster-1 -n whereami-http exec --stdin --tty deploy/whereami-http -- /bin/sh
-curl service-a.service-a.svc.cluster.local # works
+kubectl --context=autopilot-cluster-1 apply -f networkpolicy-service-a
+kubectl --context=autopilot-cluster-2 apply -f networkpolicy-service-a
+kubectl --context=autopilot-cluster-1 apply -f networkpolicy-service-b
+kubectl --context=autopilot-cluster-2 apply -f networkpolicy-service-b
+```
+Then test:
+```
+kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
+curl service-a.service-a.svc.cluster.local # works, but delayed for some reason - possibly cross-cluster failure and retry to local
 curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
 ```
 
 ### remove network policies and apply Authorization Policies for greater granularity
 ```
-kubectl --context=autopilot-cluster-1 delete -f service-a/network-policy.yaml
-kubectl --context=autopilot-cluster-1 delete -f service-b/network-policy.yaml
-kubectl --context=autopilot-cluster-2 delete -f service-a/network-policy.yaml
-kubectl --context=autopilot-cluster-2 delete -f service-b/network-policy.yaml
+kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-a
+kubectl --context=autopilot-cluster-2 delete -f networkpolicy-service-a
+kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-b
+kubectl --context=autopilot-cluster-2 delete -f networkpolicy-service-b
 kubectl --context=autopilot-cluster-1 apply -f asm-ap-service-a
 kubectl --context=autopilot-cluster-1 apply -f asm-ap-service-b
 kubectl --context=autopilot-cluster-2 apply -f asm-ap-service-a
@@ -84,6 +92,6 @@ authorizationpolicy.security.istio.io "service-a" deleted
 
 ### recreate the authorization policy to get things back to good
 ```
-$ kubectl apply -f service-a/authorizationpolicy.yaml
+$ kubectl --context=autopilot-cluster-1 apply -f service-a/authorizationpolicy.yaml
 authorizationpolicy.security.istio.io/service-a created
 ```

@@ -1,7 +1,7 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-from-whereami
+  name: allow-from-client-1
   namespace: service-a
 spec:
   policyTypes:
@@ -11,9 +11,9 @@ spec:
       app: service-a
   ingress:
   - from:
-    - nodeSelector:
+    - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: whereami-http
-      podSelector:
+          kubernetes.io/metadata.name: client-1
+    - podSelector:
         matchLabels:
-          app: whereami-http
+          app: client-1
