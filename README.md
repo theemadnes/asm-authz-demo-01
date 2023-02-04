@@ -88,10 +88,10 @@ curl service-b.service-b.svc.cluster.local # fails: Recv failure: Connection res
 
 ### apply Authorization Policies for request-level granularity
 ```
-kubectl --context=autopilot-cluster-1 apply -f asm-ap-service-a
-kubectl --context=autopilot-cluster-1 apply -f asm-ap-service-b
-kubectl --context=autopilot-cluster-2 apply -f asm-ap-service-a
-kubectl --context=autopilot-cluster-2 apply -f asm-ap-service-b
+kubectl --context=autopilot-cluster-1 apply -f asm-authorizationpolicy-service-a
+kubectl --context=autopilot-cluster-1 apply -f asm-authorizationpolicy-service-b
+kubectl --context=autopilot-cluster-2 apply -f asm-authorizationpolicy-service-a
+kubectl --context=autopilot-cluster-2 apply -f asm-authorizationpolicy-service-b
 ```
 
 ### exec into a pod that's enabled to call `service-a` via authz policy and call `service-a` and `service-b`
@@ -128,10 +128,10 @@ authorizationpolicy.security.istio.io/service-a created
 
 ### clear out all authn/z & network policies to reset back to beginning
 ```
-kubectl --context=autopilot-cluster-1 delete -f asm-ap-service-a
-kubectl --context=autopilot-cluster-1 delete -f asm-ap-service-b
-kubectl --context=autopilot-cluster-2 delete -f asm-ap-service-a
-kubectl --context=autopilot-cluster-2 delete -f asm-ap-service-b
+kubectl --context=autopilot-cluster-1 delete -f asm-authorizationpolicy-service-a
+kubectl --context=autopilot-cluster-1 delete -f asm-authorizationpolicy-service-b
+kubectl --context=autopilot-cluster-2 delete -f asm-authorizationpolicy-service-a
+kubectl --context=autopilot-cluster-2 delete -f asm-authorizationpolicy-service-b
 kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-a
 kubectl --context=autopilot-cluster-2 delete -f networkpolicy-service-a
 kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-b
