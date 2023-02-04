@@ -8,12 +8,16 @@ kubectx autopilot-cluster-2=gke_mc-e2m-01_us-central1_autopilot-cluster-2
 ```
 
 ### create client 1 (w/ sidecar)
+```
 kubectl --context=autopilot-cluster-1 apply -f client-1-with-sidecar
 kubectl --context=autopilot-cluster-2 apply -f client-1-with-sidecar
+```
 
 ### create client 2 (no sidecar)
+```
 kubectl --context=autopilot-cluster-1 apply -f client-2-no-sidecar
 kubectl --context=autopilot-cluster-2 apply -f client-2-no-sidecar
+```
 
 ### create service a
 ```
