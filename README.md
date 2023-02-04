@@ -32,14 +32,14 @@ kubectl --context=autopilot-cluster-2 apply -f service-b
 ```
 
 ### test calls to make sure everything works at first
-client-1:
+`client-1`
 ```
 kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
 curl service-a.service-a.svc.cluster.local # works
 curl service-b.service-b.svc.cluster.local # works
 ```
 
-client-2:
+`client-2`
 ```
 kubectl --context=autopilot-cluster-2 -n client-2 exec --stdin --tty deploy/client-2 -- /bin/sh
 curl service-a.service-a.svc.cluster.local # works, but note that responses only come from autopilot-cluster-2 as no sidecar to allow cross-cluster service discovery
