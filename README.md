@@ -42,7 +42,7 @@ kubectl --context=autopilot-cluster-2 apply -f networkpolicy-service-b
 Then test:
 ```
 kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
-curl service-a.service-a.svc.cluster.local # works, but delayed for some reason - possibly cross-cluster failure and retry to local
+curl service-a.service-a.svc.cluster.local # works, needed to add CIDR block matching
 curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
 ```
 

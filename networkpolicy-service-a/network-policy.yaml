@@ -11,6 +11,8 @@ spec:
       app: service-a
   ingress:
   - from:
+    - ipBlock:
+        cidr: 10.0.0.0/8
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: client-1
