@@ -162,6 +162,14 @@ kubectl --context=autopilot-cluster-2 delete -f k8s-rbac-service-b
 ```
 
 ### other notes
+exec shortcuts
+```
+kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
+kubectl --context=autopilot-cluster-2 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
+kubectl --context=autopilot-cluster-1 -n client-2 exec --stdin --tty deploy/client-2 -- /bin/sh
+kubectl --context=autopilot-cluster-2 -n client-2 exec --stdin --tty deploy/client-2 -- /bin/sh
+```
+
 curl indefinitely
 ```
 while true
