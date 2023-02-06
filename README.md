@@ -1,5 +1,6 @@
 # asm-authz-demo-01
 testing asm authz + rbac 
+![rough idea of the demo setup](/assets/arch_example.png)
 
 ### rename kube contexts
 ```
