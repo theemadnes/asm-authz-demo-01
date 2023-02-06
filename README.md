@@ -86,7 +86,22 @@ curl service-a.service-a.svc.cluster.local # fails: Recv failure: Connection res
 curl service-b.service-b.svc.cluster.local # fails: Recv failure: Connection reset by peer
 ```
 
-### apply Authorization Policies for request-level granularity
+### apply `allow nothing` Authorization Policy to entire mesh
+```
+kubectl --context=autopilot-cluster-1 apply -f asm-authorizationpolicy-allow-nothing
+kubectl --context=autopilot-cluster-2 apply -f asm-authorizationpolicy-allow-nothing
+```
+
+### exec into a pod to verify `allow nothing` is in place
+Try from `client-1` only, as `client-2` won't work as there's no sidecar
+```
+kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
+curl service-a.service-a.svc.cluster.local # doesn't work -> RBAC: access denied
+curl service-b.service-b.svc.cluster.local # doesn't work -> RBAC: access denied
+```
+
+
+### apply service-specific Authorization Policies for request-level granularity
 ```
 kubectl --context=autopilot-cluster-1 apply -f asm-authorizationpolicy-service-a
 kubectl --context=autopilot-cluster-1 apply -f asm-authorizationpolicy-service-b
@@ -138,4 +153,10 @@ kubectl --context=autopilot-cluster-1 delete -f networkpolicy-service-b
 kubectl --context=autopilot-cluster-2 delete -f networkpolicy-service-b
 kubectl --context=autopilot-cluster-1 delete -f asm-peer-authentication-meshwide
 kubectl --context=autopilot-cluster-2 delete -f asm-peer-authentication-meshwide
+kubectl --context=autopilot-cluster-1 delete -f asm-authorizationpolicy-allow-nothing
+kubectl --context=autopilot-cluster-2 delete -f asm-authorizationpolicy-allow-nothing
+kubectl --context=autopilot-cluster-1 delete -f k8s-rbac-service-a
+kubectl --context=autopilot-cluster-2 delete -f k8s-rbac-service-a
+kubectl --context=autopilot-cluster-1 delete -f k8s-rbac-service-b
+kubectl --context=autopilot-cluster-2 delete -f k8s-rbac-service-b
 ```
