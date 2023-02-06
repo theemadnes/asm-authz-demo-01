@@ -81,7 +81,7 @@ curl service-a.service-a.svc.cluster.local # works
 curl service-b.service-b.svc.cluster.local # works
 
 # test from client-2
-kubectl --context=autopilot-cluster-1 -n client-1 exec --stdin --tty deploy/client-1 -- /bin/sh
+kubectl --context=autopilot-cluster-1 -n client-2 exec --stdin --tty deploy/client-2 -- /bin/sh
 curl service-a.service-a.svc.cluster.local # fails: Recv failure: Connection reset by peer
 curl service-b.service-b.svc.cluster.local # fails: Recv failure: Connection reset by peer
 ```
@@ -159,4 +159,20 @@ kubectl --context=autopilot-cluster-1 delete -f k8s-rbac-service-a
 kubectl --context=autopilot-cluster-2 delete -f k8s-rbac-service-a
 kubectl --context=autopilot-cluster-1 delete -f k8s-rbac-service-b
 kubectl --context=autopilot-cluster-2 delete -f k8s-rbac-service-b
+```
+
+### other notes
+curl indefinitely
+```
+while true
+do
+   curl service-a.service-a.svc.cluster.local
+done
+```
+
+```
+while true
+do
+   curl service-b.service-b.svc.cluster.local
+done
 ```
