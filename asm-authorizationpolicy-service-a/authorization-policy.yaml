@@ -8,7 +8,7 @@ spec:
   rules:
   - from:
     - source:
-        principals: ["cluster.local/ns/client-1/sa/client-1"]
+        principals: ["cluster.local/ns/client-1/sa/client-1"] # look at me!
     #- source:
     #    namespaces: ["client-1"]
     to:
