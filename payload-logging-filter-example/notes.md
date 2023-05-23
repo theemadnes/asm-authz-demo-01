@@ -84,3 +84,17 @@ remove the demo
 kubectl -n default delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/prometheus-engine/v0.5.0/examples/example-app.yaml
 kubectl -n default delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/prometheus-engine/v0.5.0/examples/pod-monitoring.yaml
 ```
+
+
+scratch stuff
+```
+/home/user/e2m-gateway-api-01/istio-1.17.2-asm.8/bin/istioctl
+/home/user/e2m-gateway-api-01/istio-1.17.2-asm.8/bin/istioctl proxy-config endpoint -n frontend whereami-frontend-785dcb474b-ph9lm | grep "whereami-backend"
+
+hey -n 1000000 https://frontend.endpoints.mc-e2m-01.cloud.goog
+
+curl -s https://frontend.endpoints.mc-e2m-01.cloud.goog | jq "."
+
+kubectl -n frontend rollout restart deployment/whereami-frontend
+kubectl -n backend rollout restart deployment/whereami-backend
+```
